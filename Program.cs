@@ -10,6 +10,10 @@ namespace Sets
     {
         static void Main(string[] args)
         {
+            //Set mySet = new Set();
+            //mySet._data = new[] { 1, 2, 3 };
+            //mySet.Print(Console.WriteLine);
+            //Console.ReadKey();
         }
     }
 }
