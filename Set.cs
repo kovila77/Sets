@@ -8,13 +8,29 @@ namespace Sets
 {
     public abstract class Set
     {
-        public int[] _data;
+        protected int _maxElem;
         public delegate void PrintFunction(string stringToPrint);
+
+        public int MaxElem { get { return _maxElem; } }
 
         public abstract void AddElem(int newElem);
         public abstract void DelElem(int delElem);
         public abstract bool IsExists(int elem);
-
+        public bool CanExists(int elem)
+        {
+            if (elem >= _maxElem || elem < 0)
+            {
+                return false;
+            }
+            return true;
+        }
+        public void CheckCanExists(int elem)
+        {
+            if (elem >= _maxElem || elem < 0)
+            {
+                throw new Exception();
+            }
+        }
         public void FillSet(string stringData)
         {
             string[] newStrData = stringData.Split();
@@ -42,11 +58,11 @@ namespace Sets
         public override string ToString()
         {
             string result = "";
-            foreach (int elem in _data)
+            for (int i = 0; i < _maxElem; i++)
             {
-                if (IsExists(elem))
+                if (IsExists(i))
                 {
-                    result += " " + elem.ToString();
+                    result += $@" {i}";
                 }
             }
             return result;

@@ -10,10 +10,12 @@ namespace Sets
     {
         static void Main(string[] args)
         {
-            //Set mySet = new Set();
-            //mySet._data = new[] { 1, 2, 3 };
-            //mySet.Print(Console.WriteLine);
-            //Console.ReadKey();
+            SimpleSet mySet1 = new SimpleSet(3);
+            SimpleSet mySet2 = new SimpleSet(5);
+            mySet2.FillSet("4 2 5");
+            mySet1.FillSet(new int[] { 3 });
+            (mySet1 + mySet2).Print(Console.WriteLine);
+            Console.ReadKey();
         }
     }
 }
