@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sets
 {
-    public class MultiSet : Set, IEnumerable
+    public class MultiSet : Set
     {
         private int[] _data;
         private int _maxElem;
@@ -34,15 +34,6 @@ namespace Sets
         public override bool IsExists(int elem)
         {
             return CanExists(elem) && (_data[elem] > 0);
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (IEnumerator)GetEnumerator();
-        }
-        public MultiSetEnum GetEnumerator()
-        {
-            return new MultiSetEnum(this);
         }
 
         public static MultiSet operator +(MultiSet op1, MultiSet op2)
@@ -97,62 +88,7 @@ namespace Sets
         {
             get
             {
-                CheckCanExists(elem);
-                return _data[elem];
-            }
-        }
-    }
-
-    public class MultiSetEnum : IEnumerator
-    {
-        public MultiSet multiSet;
-
-        int position = -1;
-
-        public MultiSetEnum(MultiSet simpleSet)
-        {
-            this.multiSet = simpleSet;
-        }
-
-        public bool MoveNext()
-        {
-            position++;
-            while (!multiSet.IsExists(position))
-            {
-                position++;
-                if (position > multiSet.MaxElem)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public void Reset()
-        {
-            position = -1;
-        }
-
-        object IEnumerator.Current
-        {
-            get
-            {
-                return Current;
-            }
-        }
-
-        public int Current
-        {
-            get
-            {
-                try
-                {
-                    return multiSet[position];
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    throw new InvalidOperationException();
-                }
+                return IsExists(elem) ? _data[elem] : 0;
             }
         }
     }

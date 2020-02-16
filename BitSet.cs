@@ -87,7 +87,6 @@ namespace Sets
         {
             get
             {
-                CheckCanExists(elem);
                 return IsExists(elem);
             }
         }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sets
 {
-    public class SimpleSet : Set, IEnumerable
+    public class SimpleSet : Set
     {
         private bool[] _data;
         private int _maxElem;
@@ -31,14 +31,6 @@ namespace Sets
         public override bool IsExists(int elem)
         {
             return CanExists(elem) && _data[elem];
-        }
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (IEnumerator)GetEnumerator();
-        }
-        public SimpleSetEnum GetEnumerator()
-        {
-            return new SimpleSetEnum(this);
         }
 
         public static SimpleSet operator +(SimpleSet op1, SimpleSet op2)
@@ -98,62 +90,7 @@ namespace Sets
         {
             get
             {
-                CheckCanExists(elem);
                 return IsExists(elem);
-            }
-        }
-    }
-
-    public class SimpleSetEnum : IEnumerator
-    {
-        public SimpleSet simpleSet;
-
-        int position = -1;
-
-        public SimpleSetEnum(SimpleSet simpleSet)
-        {
-            this.simpleSet = simpleSet;
-        }
-
-        public bool MoveNext()
-        {
-            position++;
-            while (!simpleSet.IsExists(position))
-            {
-                position++;
-                if (position > simpleSet.MaxElem)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public void Reset()
-        {
-            position = -1;
-        }
-
-        object IEnumerator.Current
-        {
-            get
-            {
-                return Current;
-            }
-        }
-
-        public int Current
-        {
-            get
-            {
-                try
-                {
-                    return position;
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    throw new InvalidOperationException();
-                }
             }
         }
     }

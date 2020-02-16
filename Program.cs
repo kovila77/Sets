@@ -11,7 +11,7 @@ namespace Sets
         static void Main(string[] args)
         {
             //Tests.SimpleSetTest2();
-            Tests.MultiSetTest2();
+            Tests.MultiSetTest1();
 
             Console.ReadKey();
         }

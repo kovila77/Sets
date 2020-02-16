@@ -21,17 +21,7 @@ namespace Sets
             (mySet1 * mySet2).Print(Console.WriteLine);
             Console.WriteLine();
         }
-        public static void SimpleSetTest2()
-        {
-            SimpleSet mySet1 = new SimpleSet(454);
-            mySet1.FillSet("1 2 3 4 77 454");
-            foreach(var a in mySet1)
-            {
-                Console.WriteLine(a);
-            }
-            Console.WriteLine();
-        }
-        public static void BitSet()
+        public static void BitSetTest1()
         {
             BitSet mySet1 = new BitSet(8);
             BitSet mySet2 = new BitSet(345);
@@ -65,15 +55,12 @@ namespace Sets
             m1.Print(Console.WriteLine);
             m2.Print(Console.WriteLine);
             Console.WriteLine();
+            Console.WriteLine(m1[-123]);
             Console.WriteLine();
-        }
-        public static void MultiSetTest2()
-        {
-            MultiSet mySet1 = new MultiSet(1);
-            mySet1.FillSet(new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 1 });
-            foreach(var a in mySet1)
+            for (int i = 0; i < m1.MaxElem; i++)
             {
-                Console.WriteLine($"{a}");
+                if (m1[i] > 0)
+                    Console.WriteLine($"{i} - {m1[i]} раз");
             }
             Console.WriteLine();
         }
