@@ -6,17 +6,29 @@ using System.Threading.Tasks;
 
 namespace Sets
 {
+
+    [Serializable]
+    public class ElemOutOfSetExeption : Exception
+    {
+        public ElemOutOfSetExeption() { }
+        public ElemOutOfSetExeption(string message) : base(message) { }
+        public ElemOutOfSetExeption(string message, Exception inner) : base(message, inner) { }
+        protected ElemOutOfSetExeption(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    }
     public abstract class Set
     {
-        //protected int _maxElem;
+        protected int _maxElem;
         public delegate void PrintFunction(string stringToPrint);
 
-        //public int MaxElem { get { return _maxElem; } }
-        public abstract int MaxElem { get; }
+        public int MaxElem { get { return _maxElem; } }
+        //public abstract int MaxElem { get; }
 
         public abstract void AddElem(int newElem);
         public abstract void DelElem(int delElem);
         public abstract bool IsExists(int elem);
+
         /// <summary>
         /// just check can exists or not
         /// </summary>
@@ -38,7 +50,7 @@ namespace Sets
         {
             if (elem > MaxElem || elem < 0)
             {
-                throw new Exception();
+                throw new ElemOutOfSetExeption("The current element cannot be included in the set.");
             }
         }
         public void FillSet(string stringData)

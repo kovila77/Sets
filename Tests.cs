@@ -63,6 +63,15 @@ namespace Sets
                     Console.WriteLine($"{i} - {m1[i]} раз");
             }
             Console.WriteLine();
+            try
+            {
+                m1.AddElem(2134234234);
+            }
+            catch (ElemOutOfSetExeption e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            Console.WriteLine();
         }
     }
 }

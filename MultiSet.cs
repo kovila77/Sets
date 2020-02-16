@@ -10,8 +10,6 @@ namespace Sets
     public class MultiSet : Set
     {
         private int[] _data;
-        private int _maxElem;
-        public override int MaxElem { get { return _maxElem; } }
 
         public MultiSet(int maxElem) : base()
         {
@@ -25,8 +23,7 @@ namespace Sets
         }
         public override void DelElem(int delElem)
         {
-            CheckCanExists(delElem);
-            if (_data[delElem] > 0)
+            if (IsExists(delElem))
             {
                 _data[delElem]--;
             }

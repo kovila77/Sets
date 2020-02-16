@@ -10,8 +10,6 @@ namespace Sets
     public class SimpleSet : Set
     {
         private bool[] _data;
-        private int _maxElem;
-        public override int MaxElem { get { return _maxElem; } }
 
         public SimpleSet(int maxElem) : base()
         {
@@ -25,8 +23,10 @@ namespace Sets
         }
         public override void DelElem(int delElem)
         {
-            CheckCanExists(delElem);
-            _data[delElem] = false;
+            if (IsExists(delElem))
+            {
+                _data[delElem] = false;
+            }
         }
         public override bool IsExists(int elem)
         {

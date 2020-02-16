@@ -13,8 +13,6 @@ namespace Sets
         /// size of int in bits
         /// </summary>
         private int _sizeOfInt = sizeof(ulong) * 8;
-        private int _maxElem;
-        public override int MaxElem { get { return _maxElem; } }
         private int CountOfСell { get { return _data.Length; } }
 
         public BitSet(int maxElem) : base()
@@ -30,8 +28,10 @@ namespace Sets
         }
         public override void DelElem(int delElem)
         {
-            CheckCanExists(delElem);
-            _data[delElem / _sizeOfInt] = _data[delElem / _sizeOfInt] & ~(((ulong)1) << (delElem % _sizeOfInt));
+            if (IsExists(delElem))
+            {
+                _data[delElem / _sizeOfInt] = _data[delElem / _sizeOfInt] & ~(((ulong)1) << (delElem % _sizeOfInt));
+            }
         }
         public override bool IsExists(int elem)
         {
