@@ -8,25 +8,35 @@ namespace Sets
 {
     public abstract class Set
     {
-        protected int _maxElem;
+        //protected int _maxElem;
         public delegate void PrintFunction(string stringToPrint);
 
-        public int MaxElem { get { return _maxElem; } }
+        //public int MaxElem { get { return _maxElem; } }
+        public abstract int MaxElem { get; }
 
         public abstract void AddElem(int newElem);
         public abstract void DelElem(int delElem);
         public abstract bool IsExists(int elem);
+        /// <summary>
+        /// just check can exists or not
+        /// </summary>
+        /// <param name="elem"></param>
+        /// <returns></returns>
         public bool CanExists(int elem)
         {
-            if (elem >= _maxElem || elem < 0)
+            if (elem > MaxElem || elem < 0)
             {
                 return false;
             }
             return true;
         }
+        /// <summary>
+        /// throw exception if cant extists
+        /// </summary>
+        /// <param name="elem"></param>
         public void CheckCanExists(int elem)
         {
-            if (elem >= _maxElem || elem < 0)
+            if (elem > MaxElem || elem < 0)
             {
                 throw new Exception();
             }
@@ -45,6 +55,7 @@ namespace Sets
                 {
                     continue;
                 }
+                CheckCanExists(newElem);
                 AddElem(newElem);
             }
         }
@@ -52,13 +63,14 @@ namespace Sets
         {
             foreach (int newElem in intData)
             {
+                CheckCanExists(newElem);
                 AddElem(newElem);
             }
         }
         public override string ToString()
         {
             string result = "";
-            for (int i = 0; i < _maxElem; i++)
+            for (int i = 0; i <= MaxElem; i++)
             {
                 if (IsExists(i))
                 {

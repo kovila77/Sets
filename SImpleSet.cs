@@ -9,11 +9,13 @@ namespace Sets
     class SimpleSet : Set
     {
         private bool[] _data;
+        private int _maxElem;
+        public override int MaxElem { get { return _maxElem; } }
 
         public SimpleSet(int maxElem) : base()
         {
-            this._maxElem = maxElem + 1;
-            this._data = new bool[_maxElem];
+            this._maxElem = maxElem;
+            this._data = new bool[maxElem + 1];
         }
         public override void AddElem(int newElem)
         {
@@ -27,8 +29,7 @@ namespace Sets
         }
         public override bool IsExists(int elem)
         {
-            CheckCanExists(elem);
-            return _data[elem];
+            return CanExists(elem) && _data[elem];
         }
 
         public static SimpleSet operator +(SimpleSet op1, SimpleSet op2)
@@ -46,12 +47,14 @@ namespace Sets
                 smallest = op1;
             }
             SimpleSet resultSimpleSet = new SimpleSet(biggest.MaxElem);
-            for (int i = 0; i < smallest.MaxElem; i++)
+            for (int i = 0; i <= smallest.MaxElem; i++)
             {
                 if (biggest._data[i] || smallest._data[i])
+                {
                     resultSimpleSet._data[i] = true;
+                }
             }
-            for (int i = smallest.MaxElem + 1; i < biggest.MaxElem; i++)
+            for (int i = smallest.MaxElem + 1; i <= biggest.MaxElem; i++)
             {
                 if (biggest._data[i])
                     resultSimpleSet._data[i] = true;
@@ -73,10 +76,12 @@ namespace Sets
                 smallest = op1;
             }
             SimpleSet resultSimpleSet = new SimpleSet(biggest.MaxElem);
-            for (int i = 0; i < smallest.MaxElem; i++)
+            for (int i = 0; i <= smallest.MaxElem; i++)
             {
                 if (biggest._data[i] && smallest._data[i])
+                {
                     resultSimpleSet._data[i] = true;
+                }
             }
             return resultSimpleSet;
         }
