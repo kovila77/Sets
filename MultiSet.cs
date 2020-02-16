@@ -7,44 +7,48 @@ using System.Threading.Tasks;
 
 namespace Sets
 {
-    public class SimpleSet : Set, IEnumerable
+    public class MultiSet : Set, IEnumerable
     {
-        private bool[] _data;
+        private int[] _data;
         private int _maxElem;
         public override int MaxElem { get { return _maxElem; } }
 
-        public SimpleSet(int maxElem) : base()
+        public MultiSet(int maxElem) : base()
         {
             this._maxElem = maxElem;
-            this._data = new bool[maxElem + 1];
+            this._data = new int[maxElem + 1];
         }
         public override void AddElem(int newElem)
         {
             CheckCanExists(newElem);
-            _data[newElem] = true;
+            _data[newElem]++;
         }
         public override void DelElem(int delElem)
         {
             CheckCanExists(delElem);
-            _data[delElem] = false;
+            if (_data[delElem] > 0)
+            {
+                _data[delElem]--;
+            }
         }
         public override bool IsExists(int elem)
         {
-            return CanExists(elem) && _data[elem];
+            return CanExists(elem) && (_data[elem] > 0);
         }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return (IEnumerator)GetEnumerator();
         }
-        public SimpleSetEnum GetEnumerator()
+        public MultiSetEnum GetEnumerator()
         {
-            return new SimpleSetEnum(this);
+            return new MultiSetEnum(this);
         }
 
-        public static SimpleSet operator +(SimpleSet op1, SimpleSet op2)
+        public static MultiSet operator +(MultiSet op1, MultiSet op2)
         {
-            SimpleSet biggest;
-            SimpleSet smallest;
+            MultiSet biggest;
+            MultiSet smallest;
             if (op1.MaxElem > op2.MaxElem)
             {
                 biggest = op1;
@@ -55,25 +59,22 @@ namespace Sets
                 biggest = op2;
                 smallest = op1;
             }
-            SimpleSet resultSimpleSet = new SimpleSet(biggest.MaxElem);
+            MultiSet resultSimpleSet = new MultiSet(biggest.MaxElem);
             for (int i = 0; i <= smallest.MaxElem; i++)
             {
-                if (biggest._data[i] || smallest._data[i])
-                {
-                    resultSimpleSet._data[i] = true;
-                }
+                resultSimpleSet._data[i] = biggest._data[i] + smallest._data[i];
+
             }
             for (int i = smallest.MaxElem + 1; i <= biggest.MaxElem; i++)
             {
-                if (biggest._data[i])
-                    resultSimpleSet._data[i] = true;
+                resultSimpleSet._data[i] = biggest._data[i];
             }
             return resultSimpleSet;
         }
-        public static SimpleSet operator *(SimpleSet op1, SimpleSet op2)
+        public static MultiSet operator *(MultiSet op1, MultiSet op2)
         {
-            SimpleSet biggest;
-            SimpleSet smallest;
+            MultiSet biggest;
+            MultiSet smallest;
             if (op1.MaxElem > op2.MaxElem)
             {
                 biggest = op1;
@@ -84,44 +85,42 @@ namespace Sets
                 biggest = op2;
                 smallest = op1;
             }
-            SimpleSet resultSimpleSet = new SimpleSet(biggest.MaxElem);
+            MultiSet resultSimpleSet = new MultiSet(biggest.MaxElem);
             for (int i = 0; i <= smallest.MaxElem; i++)
             {
-                if (biggest._data[i] && smallest._data[i])
-                {
-                    resultSimpleSet._data[i] = true;
-                }
+                resultSimpleSet._data[i] = biggest._data[i] < smallest._data[i] ?
+                                            biggest._data[i] : smallest._data[i];
             }
             return resultSimpleSet;
         }
-        public bool this[int elem]
+        public int this[int elem]
         {
             get
             {
                 CheckCanExists(elem);
-                return IsExists(elem);
+                return _data[elem];
             }
         }
     }
 
-    public class SimpleSetEnum : IEnumerator
+    public class MultiSetEnum : IEnumerator
     {
-        public SimpleSet simpleSet;
+        public MultiSet multiSet;
 
         int position = -1;
 
-        public SimpleSetEnum(SimpleSet simpleSet)
+        public MultiSetEnum(MultiSet simpleSet)
         {
-            this.simpleSet = simpleSet;
+            this.multiSet = simpleSet;
         }
 
         public bool MoveNext()
         {
             position++;
-            while (!simpleSet.IsExists(position))
+            while (!multiSet.IsExists(position))
             {
                 position++;
-                if (position > simpleSet.MaxElem)
+                if (position > multiSet.MaxElem)
                 {
                     return false;
                 }
@@ -148,7 +147,7 @@ namespace Sets
             {
                 try
                 {
-                    return position;
+                    return multiSet[position];
                 }
                 catch (IndexOutOfRangeException)
                 {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sets
 {
-    class BitSet : Set
+    public class BitSet : Set
     {
         private ulong[] _data;
         /// <summary>
@@ -82,6 +82,14 @@ namespace Sets
                 resultBitSet._data[i] = smallest._data[i] & biggest._data[i];
             }
             return resultBitSet;
+        }
+        public bool this[int elem]
+        {
+            get
+            {
+                CheckCanExists(elem);
+                return IsExists(elem);
+            }
         }
     }
 }

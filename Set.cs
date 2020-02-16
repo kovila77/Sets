@@ -83,5 +83,9 @@ namespace Sets
         {
             printFunction(this.ToString());
         }
+        //public abstract bool this[int elem]
+        //{
+        //    get;
+        //}
     }
 }
