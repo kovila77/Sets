@@ -25,6 +25,10 @@ namespace Sets
         public int MaxElem { get { return _maxElem; } }
         //public abstract int MaxElem { get; }
 
+        /// <summary>
+        /// ElemOutOfSetExeption
+        /// </summary>
+        /// <param name="newElem"></param>
         public abstract void AddElem(int newElem);
         public abstract void DelElem(int delElem);
         public abstract bool IsExists(int elem);
@@ -43,7 +47,7 @@ namespace Sets
             return true;
         }
         /// <summary>
-        /// throw exception if cant extists
+        /// throw exception ElemOutOfSetExeption if cant extists
         /// </summary>
         /// <param name="elem"></param>
         public void CheckCanExists(int elem)
