@@ -24,33 +24,22 @@ namespace Sets
         public override void AddElem(int newElem)
         {
             CheckCanExists(newElem);
-            _data[newElem / _sizeOfInt] = _data[newElem / _sizeOfInt] | (((ulong)1) << (newElem % _sizeOfInt));
+            _data[newElem / _sizeOfInt] |=  1UL << (newElem % _sizeOfInt);
         }
         public override void DelElem(int delElem)
         {
             if (IsExists(delElem))
             {
-                _data[delElem / _sizeOfInt] = _data[delElem / _sizeOfInt] & ~(((ulong)1) << (delElem % _sizeOfInt));
+                _data[delElem / _sizeOfInt] &= ~(1UL << (delElem % _sizeOfInt));
             }
         }
         public override bool IsExists(int elem)
         {
-            return CanExists(elem) && ((_data[elem / _sizeOfInt] & (((ulong)1) << (elem % _sizeOfInt))) > 0);
+            return CanExists(elem) && ((_data[elem / _sizeOfInt] & (1UL << (elem % _sizeOfInt))) > 0);
         }
         public static BitSet operator +(BitSet op1, BitSet op2)
         {
-            BitSet biggest;
-            BitSet smallest;
-            if (op1.MaxElem > op2.MaxElem)
-            {
-                biggest = op1;
-                smallest = op2;
-            }
-            else
-            {
-                biggest = op2;
-                smallest = op1;
-            }
+            (BitSet biggest, BitSet smallest) = op1.MaxElem > op2.MaxElem ? (op1, op2) : (op2, op1);
             BitSet resultBitSet = new BitSet(biggest.MaxElem);
             for (int i = 0; i < smallest.CountOfСell; i++)
             {
@@ -64,18 +53,7 @@ namespace Sets
         }
         public static BitSet operator *(BitSet op1, BitSet op2)
         {
-            BitSet biggest;
-            BitSet smallest;
-            if (op1.MaxElem > op2.MaxElem)
-            {
-                biggest = op1;
-                smallest = op2;
-            }
-            else
-            {
-                biggest = op2;
-                smallest = op1;
-            }
+            (BitSet biggest, BitSet smallest) = op1.MaxElem > op2.MaxElem ? (op1, op2) : (op2, op1);
             BitSet resultBitSet = new BitSet(biggest.MaxElem);
             for (int i = 0; i < smallest.CountOfСell; i++)
             {

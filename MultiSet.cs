@@ -35,18 +35,7 @@ namespace Sets
 
         public static MultiSet operator +(MultiSet op1, MultiSet op2)
         {
-            MultiSet biggest;
-            MultiSet smallest;
-            if (op1.MaxElem > op2.MaxElem)
-            {
-                biggest = op1;
-                smallest = op2;
-            }
-            else
-            {
-                biggest = op2;
-                smallest = op1;
-            }
+            (MultiSet biggest, MultiSet smallest) = op1.MaxElem > op2.MaxElem ? (op1, op2) : (op2, op1);
             MultiSet resultSimpleSet = new MultiSet(biggest.MaxElem);
             for (int i = 0; i <= smallest.MaxElem; i++)
             {
@@ -61,23 +50,11 @@ namespace Sets
         }
         public static MultiSet operator *(MultiSet op1, MultiSet op2)
         {
-            MultiSet biggest;
-            MultiSet smallest;
-            if (op1.MaxElem > op2.MaxElem)
-            {
-                biggest = op1;
-                smallest = op2;
-            }
-            else
-            {
-                biggest = op2;
-                smallest = op1;
-            }
+            (MultiSet biggest, MultiSet smallest) = op1.MaxElem > op2.MaxElem ? (op1, op2) : (op2, op1);
             MultiSet resultSimpleSet = new MultiSet(biggest.MaxElem);
             for (int i = 0; i <= smallest.MaxElem; i++)
             {
-                resultSimpleSet._data[i] = biggest._data[i] < smallest._data[i] ?
-                                            biggest._data[i] : smallest._data[i];
+                resultSimpleSet._data[i] = Math.Min(biggest._data[i], smallest._data[i]);
             }
             return resultSimpleSet;
         }

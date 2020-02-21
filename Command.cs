@@ -6,12 +6,36 @@ using System.Threading.Tasks;
 
 namespace Sets
 {
+    public class CommandHandler
+    {
+        public readonly Dictionary<string, Command> commands;
+
+        public CommandHandler()
+        {
+            commands = new Dictionary<string, Command>();
+        }
+
+        public void Add(string commandName, Command.Executor executor)
+        {
+            commands.Add(commandName, new Command(commandName, executor));
+        }
+        public void Add(string commandName, Command.Executor executor, string description)
+        {
+            commands.Add(commandName, new Command(commandName, executor, description));
+        }
+
+        public void ExecuteCommand(string command, object args)
+        {
+            commands[command].Execute(args);
+        }
+    }
+
     public class Command
     {
         public readonly string commandName;
         public readonly string description;
         public delegate void Executor(object args);
-        public Executor executor;
+        private Executor executor;
 
         public Command(string commandName, Executor executor)
         {
@@ -28,7 +52,7 @@ namespace Sets
 
         public void Execute(object args)
         {
-            executor(args);
+            executor?.Invoke(args);
         }
     }
 }

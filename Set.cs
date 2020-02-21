@@ -90,7 +90,7 @@ namespace Sets
             {
                 if (IsExists(i))
                 {
-                    result += $@" {i}";
+                    result += $" {i}";
                 }
             }
             return result;
@@ -99,9 +99,5 @@ namespace Sets
         {
             printFunction(this.ToString());
         }
-        //public abstract bool this[int elem]
-        //{
-        //    get;
-        //}
     }
 }
