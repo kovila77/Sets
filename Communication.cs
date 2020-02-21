@@ -7,6 +7,18 @@ using System.Threading.Tasks;
 
 namespace Sets
 {
+
+    [Serializable]
+    public class NoSetException : Exception
+    {
+        public NoSetException() { }
+        public NoSetException(string message) : base(message) { }
+        public NoSetException(string message, Exception inner) : base(message, inner) { }
+        protected NoSetException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    }
+
     public class Communication
     {
         private int typeOfSet;
@@ -14,6 +26,8 @@ namespace Sets
         private string FileWithElementsName;
         private int max;
         private Set set = null;
+        private delegate void Executor(string[] arg);
+        private Dictionary<string, Executor> commands;
 
         public Communication()
         {
@@ -21,9 +35,20 @@ namespace Sets
             typeOfInput = Settings.Default.TypeInput;
             FileWithElementsName = Settings.Default.FileWithElements;
             max = Settings.Default.MaxElem;
+            commands = new Dictionary<string, Executor>();
+            commands.Add("help", new Executor(ShowHelp));
+            commands.Add("add", new Executor(AddCom));
+            commands.Add("del", new Executor(DelCom));
+            commands.Add("check", new Executor(CheckCom));
+            commands.Add("show", new Executor(ShowCom));
+            commands.Add("chgset", new Executor(SetCom));
+            commands.Add("max", new Executor(MaxCom));
+            commands.Add("reset", new Executor(ResetCom));
+            commands.Add("input", new Executor(InputCom));
+            commands.Add("showmax", new Executor(ShowMaxCom));
         }
 
-        public void SetTypeOfSet()
+        public void SetTypeOfSet(string[] arg)
         {
             Console.WriteLine("Выбирете вариант представления:");
             Console.WriteLine("1 Логический");
@@ -32,7 +57,7 @@ namespace Sets
             Console.WriteLine("Установить предыдущий вариант - enter");
             try
             {
-                typeOfSet = Convert.ToInt32(GetCommand());
+                typeOfSet = Convert.ToInt32(GetCommandString());
             }
             catch (Exception)
             {
@@ -51,13 +76,12 @@ namespace Sets
             Settings.Default.TypeSet = typeOfSet;
             Settings.Default.Save();
         }
-
-        public void SetMax()
+        public void SetMax(string[] arg)
         {
             Console.WriteLine("Введите максимум во множестве:");
             try
             {
-                max = Convert.ToInt32(GetCommand());
+                max = Convert.ToInt32(GetCommandString());
                 if (max < 0)
                 {
                     Console.WriteLine("Максимум не может быть меньше 0");
@@ -72,8 +96,7 @@ namespace Sets
             Settings.Default.Save();
             Console.WriteLine($"Максимум = {max}");
         }
-
-        public void ResetSet()
+        public void ResetSet(string[] arg)
         {
             switch (typeOfSet)
             {
@@ -84,15 +107,14 @@ namespace Sets
                     { set = new SimpleSet(max); break; }
             }
         }
-
-        public void EnterSet()
+        public void EnterSet(string[] arg)
         {
             Console.WriteLine("Ввод множества:");
             Console.WriteLine("1 Строка");
             Console.WriteLine("2 Файл");
             try
             {
-                typeOfInput = Convert.ToInt32(GetCommand());
+                typeOfInput = Convert.ToInt32(GetCommandString());
             }
             catch (Exception)
             {
@@ -103,12 +125,12 @@ namespace Sets
                 case 2:
                     {
                         Console.WriteLine($"Использовать файл {Settings.Default.FileWithElements}? (\"н\" или \"n\" для выбора другого файла)");
-                        string choice = GetCommand();
+                        string choice = GetCommandString();
                         if (choice != "н" && choice != "n") { FileWithElementsName = Settings.Default.FileWithElements; }
                         else
                         {
                             Console.WriteLine("Введите имя файла:");
-                            choice = GetCommand();
+                            choice = GetCommandString();
                             if (File.Exists(choice))
                             {
                                 FileWithElementsName = choice;
@@ -160,7 +182,7 @@ namespace Sets
                         Console.WriteLine("Введите строку элементов множества,\nразделённых символом пробел (пример \"1 2 4 5\"):");
                         try
                         {
-                            set.FillSet(GetCommand());
+                            set.FillSet(GetCommandString());
                         }
                         catch (ElemOutOfSetExeption e)
                         {
@@ -171,139 +193,143 @@ namespace Sets
             }
         }
 
-        public string GetCommand()
+        public void AddCom(string[] arg)
+        {
+            if (set == null)
+            {
+                throw new NoSetException("Множество не создано (необходимо выполнить команду \"reset\")!");
+            }
+            int newE;
+            if (IsThereIntInCommand(arg, out newE))
+            {
+                try
+                {
+                    set.AddElem(newE);
+                }
+                catch (ElemOutOfSetExeption e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+        }
+        public void DelCom(string[] arg)
+        {
+            if (set == null)
+            {
+                throw new NoSetException("Множество не создано (необходимо выполнить команду \"reset\")!");
+            }
+            int elem;
+            if (IsThereIntInCommand(arg, out elem))
+            {
+                set.DelElem(elem);
+            }
+        }
+        public void CheckCom(string[] arg)
+        {
+            if (set == null)
+            {
+                throw new NoSetException("Множество не создано (необходимо выполнить команду \"reset\")!");
+            }
+            int newE;
+            try
+            {
+                newE = Convert.ToInt32(arg[1]);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Ошибка преобразования числа:");
+                Console.WriteLine(e.Message);
+                return;
+            }
+            Console.WriteLine(set.IsExists(newE) ? "Такой элемент существует во множестве." : "Такого элемента нет во множестве.");
+            return;
+        }
+        public void ShowCom(string[] arg)
+        {
+            if (set == null)
+            {
+                throw new NoSetException("Множество не создано (необходимо выполнить команду \"reset\")!");
+            }
+            set.Print(Console.WriteLine);
+        }
+        public void SetCom(string[] arg)
+        {
+            SetTypeOfSet(null);
+        }
+        public void MaxCom(string[] arg)
+        {
+            SetMax(null);
+        }
+        public void ResetCom(string[] arg)
+        {
+            ResetSet(null);
+        }
+        public void InputCom(string[] arg)
+        {
+            if (set == null)
+            {
+                Console.WriteLine("Множество не создано (reset)!");
+                return;
+            }
+            EnterSet(null);
+        }
+        public void ShowMaxCom(string[] arg)
+        {
+            if (set == null)
+            {
+                Console.WriteLine("Множество не создано (reset)!");
+                return;
+            }
+            Console.WriteLine(set.MaxElem);
+        }
+
+        public string GetCommandString()
         {
             Console.Write(": ");
-            return Console.ReadLine();
+            return Console.ReadLine().Trim().ToLower();
         }
 
         public void ExecuteCommand(string command)
         {
             string[] command_ = command.Split();
-            switch (command_[0])
+            try
             {
-                case "add":
-                    {
-                        if (set == null)
-                        {
-                            Console.WriteLine("Множество не создано (reset)!");
-                            return;
-                        }
-                        int newE;
-                        try
-                        {
-                            newE = Convert.ToInt32(command_[1]);
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e.Message);
-                            break;
-                        }
-                        try
-                        {
-                            set.AddElem(newE);
-                        }
-                        catch (ElemOutOfSetExeption e)
-                        {
-                            Console.WriteLine(e.Message);
-                        }
-                        break;
-                    }
-                case "del":
-                    {
-                        if (set == null)
-                        {
-                            Console.WriteLine("Множество не создано (reset)!");
-                            return;
-                        }
-                        int newE;
-                        try
-                        {
-                            newE = Convert.ToInt32(command_[1]);
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine("Ошибка преобразования числа:");
-                            Console.WriteLine(e.Message);
-                            break;
-                        }
-                        set.DelElem(newE);
-                        break;
-                    }
-                case "check":
-                    {
-                        if (set == null)
-                        {
-                            Console.WriteLine("Множество не создано (reset)!");
-                            return;
-                        }
-                        int newE;
-                        try
-                        {
-                            newE = Convert.ToInt32(command_[1]);
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine("Ошибка преобразования числа:");
-                            Console.WriteLine(e.Message);
-                            break;
-                        }
-                        Console.WriteLine(set.IsExists(newE)?"такой элемент есть":"такого элемента нет");
-                        break;
-                    }
-                case "show":
-                    {
-                        if (set == null)
-                        {
-                            Console.WriteLine("Множество не создано (reset)!");
-                            return;
-                        }
-                        set.Print(Console.WriteLine);
-                        break;
-                    }
-                case "set":
-                    {
-                        SetTypeOfSet();
-                        break;
-                    }
-                case "max":
-                    {
-                        SetMax();
-                        break;
-                    }
-                case "reset":
-                    {
-                        ResetSet();
-                        break;
-                    }
-                case "input":
-                    {
-                        if (set == null)
-                        {
-                            Console.WriteLine("Множество не создано (reset)!");
-                            return;
-                        }
-                        EnterSet();
-                        break;
-                    }
-                case "showmax":
-                    {
-                        if (set == null)
-                        {
-                            Console.WriteLine("Множество не создано (reset)!");
-                            return;
-                        }
-                        Console.WriteLine(set.MaxElem);
-                        break;
-                    }
-                default:
-                    {
-                        ShowHelp();
-                        break;
-                    }
+                commands[command_[0]](command_);
             }
+            catch (NoSetException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Невозможно исполнить комманду!");
+            }
+            return;
         }
 
+        private bool IsThereIntInCommand(string[] args, out int number)
+        {
+            number = -1;
+            try
+            {
+                number = Convert.ToInt32(args[1]);
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                Console.WriteLine("Вы неправильно ввели число!");
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Ошибка преобразования числа:");
+                Console.WriteLine(e.Message);
+                return false;
+
+            }
+            return true;
+        }
+
+        public void ShowHelp(string[] arg) { ShowHelp(); }
         public void ShowHelp()
         {
             Console.WriteLine("Доступные команды");
@@ -311,8 +337,8 @@ namespace Sets
             Console.WriteLine("add <число> - добавить элемент во множество");
             Console.WriteLine("del <число> - удалить элемент из множества (если такой существует)");
             Console.WriteLine("check <число> - проверь существование <число> во множестве");
-            Console.WriteLine("show - напечатать множества");
-            Console.WriteLine("set - установить тип множества");
+            Console.WriteLine("show - вывести множество на экран");
+            Console.WriteLine("chgset - установить тип множества");
             Console.WriteLine("max - установить максимум (требуется пересоздание множества)");
             Console.WriteLine("showmax - показать текущий максимум во множестве");
             Console.WriteLine("reset - пересоздание множества на основе текущих параметров");

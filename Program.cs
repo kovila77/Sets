@@ -15,22 +15,21 @@ namespace Sets
 
             Communication com = new Communication();
 
-            //com.SetTypeOfSet();
+            //com.SetTypeOfSet(null);
 
-            //com.SetMax();
+            // com.SetMax(null);
 
-            //com.ResetSet();
+            // com.ResetSet(null);
 
-            //com.EnterSet();
+            //com.EnterSet(null);
 
-            com.ShowHelp();
+            //com.ShowHelp();
 
-            string command = com.GetCommand();
+            string command = com.GetCommandString();
             while (command != "exit")
             {
                 com.ExecuteCommand(command);
-
-                command = com.GetCommand();
+                command = com.GetCommandString();
             }
         }
     }

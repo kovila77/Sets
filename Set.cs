@@ -54,7 +54,7 @@ namespace Sets
         {
             if (elem > MaxElem || elem < 0)
             {
-                throw new ElemOutOfSetExeption("The current element cannot be included in the set.");
+                throw new ElemOutOfSetExeption($"Текущий элемент не входит в пределы множества.\nГраницы: {0}-{MaxElem}");
             }
         }
         public void FillSet(string stringData)
