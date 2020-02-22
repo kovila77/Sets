@@ -40,11 +40,7 @@ namespace Sets
         /// <returns></returns>
         public bool CanExists(int elem)
         {
-            if (elem > MaxElem || elem < 0)
-            {
-                return false;
-            }
-            return true;
+            return !(elem > MaxElem || elem < 0);
         }
         /// <summary>
         /// throw exception ElemOutOfSetExeption if cant extists

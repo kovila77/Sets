@@ -81,10 +81,24 @@ namespace Sets
             string s1, s2;
             Console.WriteLine("Введите первую строку, с которой будет заполнено множество один");
             s1 = GetCommandString();
+            try
+            {
+                set1.FillSet(s1);
+            }
+            catch (ElemOutOfSetExeption e)
+            {
+                Console.WriteLine(e.Message);
+            }
             Console.WriteLine("Введите вторую строку, с которой будет заполнено множество два");
             s2 = GetCommandString();
-            set1.FillSet(s1);
-            set2.FillSet(s2);
+            try
+            {
+                set2.FillSet(s2);
+            }
+            catch (ElemOutOfSetExeption e)
+            {
+                Console.WriteLine(e.Message);
+            }
             Console.WriteLine("Объединение множеств:");
             if (set1 is SimpleSet) { Console.WriteLine(((SimpleSet)set1 + (SimpleSet)set2)); }
             else if (set1 is BitSet) { Console.WriteLine(((BitSet)set1 + (BitSet)set2)); }
@@ -203,7 +217,8 @@ namespace Sets
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
-                    throw;
+                    return;
+                    //throw;
                 }
                 try
                 {

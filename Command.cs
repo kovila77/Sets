@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Sets
-{
+{   
     public class CommandHandler
     {
         public readonly Dictionary<string, Command> commands;
