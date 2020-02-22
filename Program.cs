@@ -15,15 +15,15 @@ namespace Sets
 
             Communication com = new Communication();
 
-            com.SetTypeOfSet(null);
+            //com.SetTypeOfSet(null);
 
-            com.SetMax(null);
+            //com.SetMax(null);
 
-            com.ResetSet(null);
+            //com.ResetSet(null);
 
-            com.EnterSet(null);
+            //com.EnterSet(null);
 
-            com.ShowHelp();
+            //com.ShowHelp();
 
             string command = com.GetCommandString();
             while (command != "exit")

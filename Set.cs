@@ -67,7 +67,7 @@ namespace Sets
                 {
                     continue;
                 }
-                CheckCanExists(newElem);
+                if (!CanExists(newElem)) continue;
                 AddElem(newElem);
             }
         }
@@ -75,7 +75,7 @@ namespace Sets
         {
             foreach (int newElem in intData)
             {
-                CheckCanExists(newElem);
+                if (!CanExists(newElem)) continue;
                 AddElem(newElem);
             }
         }
